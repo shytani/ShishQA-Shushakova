@@ -1,0 +1,9 @@
+Effects:                Strikethrough, Double strikethrough, Superscript, Subscript, Shadow, Outline, Emboss, Engrave, Small caps, All caps, Hidden
+Size:          		8, 9, 10, 11, 12, 13.5
+Font:	       		Palantino Linotype, NSimSun, Nyala, Old English Text MT, Onyx	
+Font style:    		Regular, Italic, Bold, Bold Italic
+Font color:    		black
+Underline style: 	(none) 
+Underline color: 	Automatic
+
+
