@@ -1,0 +1,45 @@
+Работает!
+
+#/!bin/bash       												/указывает, что используется оболочка bash
+
+options=(		
+	'1'
+	"2"
+	'3'
+	'4'
+	'5'
+)
+echo 'Please choose an option'									/вывод текста в консоль 'Please choose an option'	
+select input in "${options[@]}"; do								/создание меню, чтение вводимого значения
+	
+	case "$input" in				
+		"${options[0]}")										/если введено значение "1"
+			ls												/распечатывается список входящих в каталог файлов и папок
+			;;
+		"${options[1]}")										/если введено  значение "2"
+			date $'+Time: %T\nDate: %D'   						/Выводится  время и дата
+			;;
+		"${options[2]}")										/если введено значение "3"
+			read -p 'What file do you wish to check? ' finput       		/Выводиться  текст на консоль 'What file do you wish to check? '  Ввод finput
+			if [[ -d $finput ]]; then								/Если введеный finput существует и является каталогом, тогда выводится текст "is a directory."
+				format='%s is a directory.\n'
+			elif [[ -f $finput ]]; then								/Если введеный finput существует и является файлом , тогда выводится текст  "is a file."
+				format='%s is a file.\n'
+			else
+				format='%s does not exist.\n'					/Если введеный finput ни файл, ни папка, тогда выводиться "does not exist."
+
+			fi
+			printf "$format" "$finput"							/Вывод опций меню					
+			;;
+		"${options[3]}")
+			read -p 'Please enter filename: ' binput      			/Вывод текста  'Please enter filename:"  Ввод  binput 
+			cp "$binput"{,.bak}								/Создание резервной копии файла с таким же именем binput  и расширением .bak
+			;;												/Если файла с имнем binput  не существует, то ошибка выполнения  cp: cannot stat ' ': No such file or directory
+		"${options[4]}")										/Введено значение "5". Выход из меню.
+			break
+			;;
+		*)
+			echo 'Not a valid option.'       						/Если введеное значение не 1,2,3,4,5,  то текст  'Not a valid option.'
+			;;
+	esac
+done
