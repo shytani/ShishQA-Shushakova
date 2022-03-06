@@ -161,7 +161,26 @@ driver.findElement(By.id("input-card-number")).click();
     driver.findElement(By.xpath("//div[@id='payment-item-total']/div[2]")).click();
     assertEquals("291.86", driver.findElement(By.id("payment-item-total-amount")).getText());
 }
-
+    @Test
+    public void Test8 () throws Exception {
+        driver.get(baseUrl);
+        driver.findElement(By.id("input-card-number")).click();
+        driver.findElement(By.id("input-card-number")).clear();
+        driver.findElement(By.id("input-card-number")).sendKeys("5555 5555 5555 4477");
+        driver.findElement(By.id("input-card-holder")).click();
+        driver.findElement(By.id("input-card-holder")).clear();
+        driver.findElement(By.id("input-card-holder")).sendKeys("TATIANA  SH");
+        driver.findElement(By.id("card-expires-month")).click();
+        new Select(driver.findElement(By.id("card-expires-month"))).selectByVisibleText("04");
+        driver.findElement(By.id("card-expires-year")).click();
+        new Select(driver.findElement(By.id("card-expires-year"))).selectByVisibleText("2033");
+        driver.findElement(By.id("input-card-cvc")).click();
+        driver.findElement(By.id("input-card-cvc")).clear();
+        driver.findElement(By.id("input-card-cvc")).sendKeys("111");
+        driver.findElement(By.id("action-submit")).click();
+        driver.findElement(By.xpath("//div[@id='payment-item-ordernumber']/div[2]")).click();
+        assertEquals("458211", driver.findElement(By.xpath("//div[@id='payment-item-ordernumber']/div[2]")).getText());
+    }
 
     @After
     public void tearDown() throws Exception {
