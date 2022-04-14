@@ -20,7 +20,7 @@ public class FirstTest {
            }
 
     @Test
-    public void FirstTest() throws Exception {
+    public void FirstTestt() throws Exception {
         driver.get(baseUrl);
         WebElement cardNumber = driver.findElement(By.id("input-card-number"));
         WebElement cardHolder = driver.findElement(By.id("input-card-holder"));
