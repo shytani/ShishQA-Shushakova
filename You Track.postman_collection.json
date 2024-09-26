@@ -1,0 +1,357 @@
+{
+	"info": {
+		"_postman_id": "88fecca6-3634-4022-9333-ea185deb119a",
+		"name": "You Track",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ProjectList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"SetProjectIDvariable\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"ProjectID\", jsonData[1].id);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/api/admin/projects?fields=id,name,shortName",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"projects"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "id,name,shortName"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Issue",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var rmd = Math.random();\r",
+							"pm.collectionVariables.set(\"summary\", \"Shushakova \" + rmd);\r",
+							" pm.collectionVariables.set(\"description\", \"Это поле описания\" + rmd);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"SetIssueIDvariable\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"IssueID\", jsonData.id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"project\": {\r\n        \"id\": \"{{ProjectID}}\"\r\n    },\r\n    \"summary\": \"{{summary}}\",\r\n    \"description\": \"{{description}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/issues",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"issues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "IssueInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"1 test\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.summary).to.eql(pm.collectionVariables.get(\"summary\"));\r",
+							"     pm.expect(jsonData.description).to.eql(pm.collectionVariables.get(\"description\"));\r",
+							"    \r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"3 test\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(pm.collectionVariables.get(\"summary\"));\r",
+							"    pm.expect(pm.response.text()).to.include(pm.collectionVariables.get(\"description\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"2 Test\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"string_you_want_to_search\");\r",
+							"});\r",
+							"pm.test(\"Set fields variables values\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"fieldName\", jsonData.customFields[2].projectCustomField.field.name);\r",
+							"    pm.collectionVariables.set(\"fieldType\", jsonData.customFields[2].$type);\r",
+							"    pm.collectionVariables.set(\"fieldID\", jsonData.customFields[2].id);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/api/issues/{{IssueID}}?fields=$type,id,summary,description,customFields($type,id,projectCustomField($type,id,field($type,id,name)),value($type,avatarUrl,buildLink,color(id),fullName,id,isResolved,localizedName,login,minutes,name,presentation,text))",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{IssueID}}"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "$type,id,summary,description,customFields($type,id,projectCustomField($type,id,field($type,id,name)),value($type,avatarUrl,buildLink,color(id),fullName,id,isResolved,localizedName,login,minutes,name,presentation,text))"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "IssueStatus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Set New Issue state values\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"NewState\", jsonData.bundle.values[7].id);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/api/admin/projects/{{ProjectID}}/customFields/{{fieldID}}?fields=bundle(values(id,name,$type),aggregatedUsers(id,name,$type))",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"projects",
+						"{{ProjectID}}",
+						"customFields",
+						"{{fieldID}}"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "bundle(values(id,name,$type),aggregatedUsers(id,name,$type))"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"State\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.customFields[2].value.id).to.eql(pm.collectionVariables.get(\"NewState\"));\r",
+							"});\r",
+							"pm.test(\"Priority\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.customFields[0].value.name).to.eql(\"Major\");\r",
+							"});\r",
+							"pm.test(\"Assignee\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.customFields[3].value.name).to.eql(\"shytani@mail.ru\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customFields\": [\r\n        {\r\n            \"name\": \"Assignee\",\r\n            \"$type\": \"SingleUserIssueCustomField\",\r\n            \"value\": {\r\n                \"login\": \"shytani@mail.ru\"\r\n            }\r\n        },\r\n        {\r\n            \"name\": \"Priority\",\r\n            \"$type\": \"SingleEnumIssueCustomField\",\r\n            \"value\": {\r\n                \"name\": \"Major\"\r\n            }\r\n        },\r\n        {\r\n            \"name\": \"{{fieldName}}\",\r\n            \"$type\": \"{{fieldType}}\",\r\n            \"value\": {\r\n                \"id\": \"{{NewState}}\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/issues/{{IssueID}}?fields=customFields(id,name,value(avatarUrl,buildLink,color(id),fullName,id,isResolved,localizedName,login,minutes,name,presentation,text))",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{IssueID}}"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "customFields(id,name,value(avatarUrl,buildLink,color(id),fullName,id,isResolved,localizedName,login,minutes,name,presentation,text))"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "1234567",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "shytani@mail.ru",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ProjectID",
+			"value": ""
+		},
+		{
+			"key": "URL",
+			"value": ""
+		},
+		{
+			"key": "summary",
+			"value": ""
+		},
+		{
+			"key": "description",
+			"value": ""
+		},
+		{
+			"key": "IssueID",
+			"value": ""
+		},
+		{
+			"key": "fieldName",
+			"value": ""
+		},
+		{
+			"key": "fieldType",
+			"value": ""
+		},
+		{
+			"key": "fieldID",
+			"value": ""
+		},
+		{
+			"key": "NewState",
+			"value": ""
+		},
+		{
+			"key": "login",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
